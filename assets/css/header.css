@@ -1,0 +1,47 @@
+#mainHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--argent);
+
+    background-color: var(--slate800);
+    border-radius: 100px;
+}
+
+#subHeader {
+    display: flex;
+    align-items: top;
+    gap: 10px;
+
+    background-color: var(--azure);
+    border-radius: 100px;
+}
+
+
+#headerIcon {
+    height: 2cm;
+    border-radius: 100%;
+}
+
+#headerTitle {
+    min-width: 20%;
+    max-width: 20%;
+}
+
+header nav {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+}
+
+header nav ul {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    max-width: 75%;
+    padding: 0;
+
+    list-style-type: none;
+    gap: 10px;
+}

@@ -1,0 +1,14 @@
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: var(--argent);
+
+    margin: 1vh;
+    border-radius: 50px;
+}
+
+textarea {
+    resize: none;
+}

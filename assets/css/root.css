@@ -1,0 +1,38 @@
+:root {
+    /*Fraternity Colors*/
+    --argent: #C0C0C0;
+    --azure: #007FFF;
+
+    /*Colors from PHI DELTA THETA IDENTITY AND STYLE GUIDELINES*/
+    --navy: #0D1433;
+    --blue: #619CC7;
+    --lightBlue: #DBECF3;
+    --blueGray: #535B72;
+    --gold: #F3BD28;
+    --gray: #AFAFB4;
+    --red: #B33634;
+    --slate100: #F8FAFC;
+    --slate200: #F1F5F9;
+    --slate300: #E2E8F0;
+    --slate400: #CBD5E1;
+    --slate500: #94A3B8;
+    --slate600: #64748B;/*use black text for slate 600-900*/
+    --slate700: #475569;
+    --slate800: #334155;
+    --slate900: #1E293B;
+}
+
+html{
+    background-color: var(--slate900);
+}
+
+a {
+    color: inherit;
+}
+
+/*Forces the footer to always be at the bottom of the page*/
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 110vh;
+}

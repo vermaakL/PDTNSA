@@ -1,0 +1,28 @@
+main{
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+}
+
+.mainMenu {
+    --buttonSize: 4cm;
+    --buttonSpacing: 40px;
+    
+    display: flex;
+    max-width: var(--buttonSize);
+    min-width: var(--buttonSize);
+    max-height: var(--buttonSize);
+    min-height: var(--buttonSize);
+    margin: var(--buttonSpacing) var(--buttonSpacing) var(--buttonSpacing) var(--buttonSpacing);
+
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 10px;
+
+    background-color: var(--argent);
+    border-color: var(--azure);
+}
+
+
