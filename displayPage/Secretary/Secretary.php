@@ -41,6 +41,13 @@
 
             echo "<script src=\"$path\"></script>\n";
         }
+
+        $files = glob(".\jsFiles\*.js");
+        foreach($files as $file){
+            $path = Secretary::$relativeDirectoryPath.$file;
+
+            echo "<script src=\"$path\"></script>\n";
+        }
     }
 ?>
 

@@ -9,6 +9,26 @@ form {
     border-radius: 50px;
 }
 
+form input, form textarea{
+    width: 90%;
+    border-radius: 10px;
+}
+
+#submit{
+    background-color: var(--blue);
+    width: 10cm;
+    height: 1.5cm;
+    font-size: xx-large;
+    margin: 5mm;
+}
+
+
 textarea {
     resize: none;
+    height: 8cm;
+    font-size: x-large;
+}
+
+label {
+    font-size: x-large;
 }
