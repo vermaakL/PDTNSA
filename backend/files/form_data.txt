@@ -1,0 +1,21 @@
+Array
+(
+    [attendance] => Array
+        (
+            [Leon] => Array
+                (
+                    [0] => Array
+                        (
+                            [status] => onlineButton
+                            [time] => 4/29/2024, 5:00:27 PM
+                        )
+
+                )
+
+        )
+
+    [ReadingandAdoptingtheMinutes] => 
+    [ReportsofOfficers] => 
+    [ReportsofCommittes] => 
+    [GeneralBuisness] => 
+)

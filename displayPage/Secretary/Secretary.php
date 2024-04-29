@@ -1,60 +1,35 @@
 <?php
     class Secretary{
-        public static $oldWorkingDirectory;
-        public static $relativeDirectoryPath;
+        private static $relativeDirPath;
 
+        //call to intalize class
         public static function init(){
-            self::$oldWorkingDirectory = getcwd();
-            self::$relativeDirectoryPath = str_replace($_SERVER['DOCUMENT_ROOT'], '', __DIR__);
-            
-            chdir(dirname(__FILE__));
+            //saves the relative path to the current folder from the root
+            self::$relativeDirPath = str_replace(getcwd().'\\', '', __DIR__);
         }
-        public static function ret(){
-            chdir(self::$oldWorkingDirectory);
+
+        //adds the menu buttons to execute the actions
+        public static function addMenuButtons(){
+            $files = glob(self::$relativeDirPath."/*.js");
+            foreach($files as $file){
+                $file = pathinfo($file, PATHINFO_FILENAME);
+                $name = str_replace('_', ' ', $file);
+                
+                echo "<button type=\"button\" onclick=\"$file()\" class=\"mainMenu\">$name</button>\n";
+            }
+        }
+
+        //adds the js files that the buttons trigger
+        public static function addJsFiles(){
+            $files = glob(self::$relativeDirPath."/*.js");
+            foreach($files as $file){
+                echo "<script src=\"$file\"></script>\n";
+            }
         }
     }
+
+    //call stack
     Secretary::init();
+    Secretary::addMenuButtons();
+    Secretary::addJsFiles();
 ?>
-
-<!--declare functions for creating Elements--> 
-<?php 
-    /**
-     * Create the secretary menue buttons
-     */
-    function SecretaryaddMenuButtons(){
-        $files = glob(".\actions\*.js");
-        foreach($files as $file){
-            $file = pathinfo($file, PATHINFO_FILENAME);
-            $name = str_replace('_', ' ', $file);
-            
-            echo "<button type=\"button\" onclick=\"$file()\" class=\"mainMenu\">$name</button>\n";
-        }
-    }
-
-    /**
-     * Add the java script files that the secretary requires
-     */
-    function AddJsFiles(){
-        $files = glob(".\actions\*.js");
-        foreach($files as $file){
-            $path = Secretary::$relativeDirectoryPath.$file;
-
-            echo "<script src=\"$path\"></script>\n";
-        }
-
-        $files = glob(".\jsFiles\*.js");
-        foreach($files as $file){
-            $path = Secretary::$relativeDirectoryPath.$file;
-
-            echo "<script src=\"$path\"></script>\n";
-        }
-    }
-?>
-
-<!--call web elements functions-->
-<?php
-    SecretaryaddMenuButtons();
-    AddJsFiles();
-?>
-
-<?php Secretary::ret();?>
