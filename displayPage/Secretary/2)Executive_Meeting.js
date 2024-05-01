@@ -1,6 +1,3 @@
-/**
- *REQUIRES CreateForm(formConfig, backendDestination) FROM assets/actions/CreateForm.js
-*/
 function Executive_Meeting(){
   
   formConfig = {"Executive Meeting Minutes" : {"type": "h1"},

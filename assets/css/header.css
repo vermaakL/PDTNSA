@@ -45,3 +45,15 @@ header nav ul {
     list-style-type: none;
     gap: 10px;
 }
+
+#logout {
+    background-color: var(--argent);
+    font-size: x-large;
+    margin: 7px;
+    padding: 7px;
+    border-radius: 50px;
+}
+
+#logoutForm {
+    all:initial;
+}

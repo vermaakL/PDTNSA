@@ -1,156 +1,137 @@
-/**
- * To-Do
- * 1)Store the form data on local storage if user leaves page. Restore when they come back.
- * 2)Custom auto fill
-*/
+class CreateForm{
+  static #formCounter = 0;
+  
+  #parent;
+  #backendDestination;
+  #formNum;
 
-/**    
- * Creates a form from the inputed JSON.
- * @param {JSON} formConfig
- * {"labelTitle" : {type : "HTMLElement", additional HTMLElement attributes....}}
- */
-function CreateForm(appendTo, backendDestination, formConfig){
+  #form;
+  #submit;
+  
+  constructor(parent, backendDestination){
+    this.#parent = parent;
+    this.#backendDestination = backendDestination;
+    this.#formNum = CreateForm.#formCounter;
+    CreateForm.#formCounter++;
 
-  //function global variables
-  var form = document.createElement("form");
-  var attendanceData
+    //create form
+    this.#form = document.createElement("form");
+    this.#form.id = "Form"+this.#formNum;
+    this.#form.className = "Form";
+    this.#form.action = backendDestination;
+    this.#form.method = "post"
+    this.#parent.appendChild(this.#form);
 
-  /**
-   * 
-   * @param {*} formConfig 
-   */
-  function createForm(formConfig){
+    //add form submit button to the end
+    this.#submit = document.createElement("input");
+    this.#submit.className = "submit";
+    this.#submit.type = "submit";
+    this.#submit.value = "Submit";
+    this.#form.appendChild(this.#submit);
 
-    //add form style to appendTo
-    let style = document.createElement("style");
-    style.innerHTML = `
-      main {
-        all: initial;
-      }
-
-      .formTextBox {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        width: 100%;
-      }
-
-      .addProcedure {
-        
-        padding: 0;
-        margin:0;
-        margin-bottom: 10px;
-
-        border-color: var(--azure);
-        border-width: 2px;
-        border-style: solid;
-        border-radius: 100px;
-
-        background-color: var(--lightBlue);
-      }
-    `;
-    appendTo.appendChild(style);
-    
-    //add attributes to form and append to appendTo
-    form.setAttribute("id", "myForm");
-    form.setAttribute("action", backendDestination);
-    form.setAttribute("method", "post");
-    appendTo.appendChild(form);
-
-    //add elements from formConfig
-    for(let key in formConfig){
-
-      let elementId = key.replace(/ /g, "");;
-      let elementInfo = formConfig[key];
-
-      if(elementInfo["type"]==="h1"){
-        let h1 = document.createElement("h1");
-        h1.innerText = key;
-
-        form.appendChild(h1);
-        continue;
-      }
-
-      if(elementInfo["type"]==="attendance"){
-        let label = document.createElement("label");
-        label.setAttribute("id", "attendanceTitle");
-        label.textContent = key;
-        form.appendChild(label);
-
-        attendanceData = generateAttendance(label, elementInfo["group"]);
-        continue;
-      }
-
-      if(elementInfo["type"]==="textarea"){
-
-        //create textBoxDiv
-        let div = document.createElement("div");
-        div.setAttribute("class", "formTextBox");
-        div.setAttribute("id", elementId+"Div");
-
-        //create the textareas label
-        let label = document.createElement("label");
-        label.setAttribute("for", elementId);
-        label.textContent = key;
-        div.appendChild(label);
-
-        //create the textarea
-        let textarea = document.createElement("textarea");
-        textarea.setAttribute("id", elementId);
-        textarea.setAttribute("name", elementId);
-        div.appendChild(textarea);
-
-        //append the text area to the form
-        form.appendChild(div);
-        form.appendChild(document.createElement("br"));
-        continue;
-      }
-
-      if(elementInfo["type"]==="customDropDown"){
-        let addProcedureButton = document.createElement("div");
-        addProcedureButton.className = "addProcedure";
-        addProcedureButton.id = "add"+elementId;
-
-        let p = document.createElement("p");
-        p.id = "add"+elementId+"p";
-        p.style.margin = "0";
-        p.style.padding = "0";
-        p.innerText = "+ "+key;
-        addProcedureButton.appendChild(p);
-
-        form.appendChild(addProcedureButton);
-        continue;
-      }
-
-      
-    }
-
-    //add submit button
-    let submit = document.createElement("input");
-    submit.id = "submit";
-    submit.type = "submit";
-    submit.value = "Submit";
-    form.insertAdjacentElement("beforeend", submit);
+    //call stack
+    this.#handleFormSubmission();
+    this.#handleQualityOfLifeFeatures();
   }
 
-  /**
-   * @param {Node} appendTo 
-   * The HTMLElement to append the attendance list beneth
-   * @returns 
-   */
-  function generateAttendance(appendTo){
-    //Attendance data to return
-    attendanceData = {};
+  h1(innerText){
+    let h1 = document.createElement("h1");
+    h1.innerText = innerText;
+
+    this.#form.insertBefore(h1, this.#submit);
+  }
+
+  #textareaCount = 0;
+  textarea(labelText){
+    this.#textareaCount++;
+
+    let className = "formTextArea";
+    let id = this.#form.id+"textarea"+this.#textareaCount;
+
+    //create textBoxDiv
+    let div = document.createElement("div");
+    div.setAttribute("class", className);
+
+    //create the textareas label
+    let label = document.createElement("label");
+    label.for = id;
+    label.textContent = labelText;
+    div.appendChild(label);
+
+    //create the textarea
+    let textarea = document.createElement("textarea");
+    textarea.for = id;
+    textarea.name = id;
+    textarea.id = id;
+    div.appendChild(textarea);
+
+    //append the text area to the form
+    this.#form.insertBefore(div, this.#submit);
+    this.#form.insertBefore(document.createElement("br"), this.#submit);
+  }
+
+  #dropDownTextareaCount = 0;
+  dropDownTextarea(innerText){
+    this.#dropDownTextareaCount++;
+
+    let dropDownTextarea = document.createElement("div");
+    dropDownTextarea.className = "formCustomDropDown";
+    dropDownTextarea.id = this.#form.id+"customDropDown"+this.#dropDownTextareaCount;
+    
+    let p = document.createElement("p");
+    p.style.margin = "0";
+    p.style.padding = "0";
+    p.innerText = "+ "+innerText;
+    dropDownTextarea.appendChild(p);
+
+    this.#form.insertBefore(dropDownTextarea, this.#submit);
+
+    dropDownTextarea.addEventListener("click", function(){
+      let dropDownId = dropDownTextarea.id+"dropDown";
+
+      //check if already exsists. If so, prompt user to ask if they want to remove it.
+      let currentElement = document.getElementById(dropDownId)
+      if(currentElement){
+        if(!confirm("Are you sure you want to remove this procedure?")){return;}
+  
+        currentElement.parentNode.removeChild(currentElement);
+        return;
+      }
+
+      let div = document.createElement("div");
+      div.className = "formTextArea";
+      div.id = dropDownId;
+      div.innerHTML = `
+        <label for="${dropDownId}">${innerText}</label>
+        <br>
+        <textarea name="${innerText}"></textarea>
+        <br>
+      `;
+
+      dropDownTextarea.insertAdjacentElement("afterend", div);
+    });
+  }
+
+  #attendanceData;
+  attendance(title, attendies){
+    
+    //create the attendance label
+    let label = document.createElement("label");
+    label.setAttribute("id", "attendanceTitle");
+    label.textContent = title;
+    this.#form.appendChild(label);
+
+
 
     //create attendance form
     let attendance = document.createElement("div");
-    attendance.setAttribute("id", "attendance");
+    attendance.id = this.#form.id+"attendance";
+    attendance.className = "attendance";
 
     //attendance form css
     attendance.innerHTML =  `
       <style>
-        #attendance {
+        .attendance {
           display: flex;
           flex-wrap: wrap;
           justify-content: center;
@@ -218,54 +199,47 @@ function CreateForm(appendTo, backendDestination, formConfig){
     `;
 
     /**
-     * request the name of expected people from the backend server
-     */
-    function serverResponse(){
-      let result = ["Gabe", "Leon", "Dakoda", "Aryaman", "Matt", "jamie", "jordon"];
-      return result;
-    }
-
-    /**
      * Add individual attendance boxs for each brother
     */
-    function createButtonsForAttendies(brothers){
+    function createButtonsForAttendies(){
+
       function createDiv(className){
         let newDiv = document.createElement("div");
         newDiv.setAttribute("class", className);
         
         return newDiv;
       }
-      function createButton(brother, type){
+      function createButton(attendie, type){
         let newButton = document.createElement("div");
 
-        newButton.setAttribute("id", brother+type);
+        newButton.setAttribute("id", attendie+type);
         newButton.setAttribute("tabindex", "0");
         newButton.setAttribute("class", type);
 
-        newButton.addEventListener("click", function(){buttonClick(brother, type);})
-        newButton.addEventListener("keydown", function(e){if (e.key === "Enter") {buttonClick(brother, type);}});
+        newButton.addEventListener("click", function(){buttonClick(attendie, type);})
+        newButton.addEventListener("keydown", function(e){if (e.key === "Enter") {buttonClick(attendie, type);}});
         
         return newButton;
       }
 
-      brothers.forEach(brother => {
+      attendies.forEach(attendie => {
         let attendanceBox = createDiv("attendanceBox");
         attendance.appendChild(attendanceBox);
 
         let attendanceBoxHeading = document.createElement("p");
-        attendanceBoxHeading.textContent = brother;
+        attendanceBoxHeading.textContent = attendie;
         attendanceBox.appendChild(attendanceBoxHeading);
 
         let boxButton = createDiv("button");
         attendanceBox.appendChild(boxButton);
 
-        let inPersonButton = createButton(brother, "inPersonButton");
+        let inPersonButton = createButton(attendie, "inPersonButton");
         inPersonButton.innerHTML = `
           <p>Present</p>
         `;
         boxButton.appendChild(inPersonButton);
         
-        let onlineButton = createButton(brother, "onlineButton");
+        let onlineButton = createButton(attendie, "onlineButton");
         onlineButton.innerHTML = `
           <p>Online</p>
         `;
@@ -332,24 +306,20 @@ function CreateForm(appendTo, backendDestination, formConfig){
       attendanceData[name].push({status, time});
     }
 
-    let brothers = serverResponse();
 
-    createButtonsForAttendies(brothers);
-
+    createButtonsForAttendies();
     //createButtonForGuests();
 
-    appendTo.after(attendance);
-
-    return attendanceData;
+    this.#form.insertBefore(attendance, this.#submit);
   }
 
   /**
    * handels form submition
    */
-  function handleFormSubmission(){
+  #handleFormSubmission(){
     document.querySelector('form').addEventListener('submit', function(event) {
       event.preventDefault();
-      
+    
       //parse form data into json and add attendance data
       var formData = {};
       formData["attendance"] = attendanceData;
@@ -371,55 +341,11 @@ function CreateForm(appendTo, backendDestination, formConfig){
     });
   }
 
-  /**
-   * Add procedures that arn't used often during regular meetings
-  */
-  function handleCustomDropDown(){
-    
-    //iterate through all the addProcedure divs make them trigger insertSpecialProcedures onclick
-    let addProcedureButtons = document.getElementsByClassName("addProcedure");
-    Array.from(addProcedureButtons).forEach(function(procedureButton){
-
-      procedureButton.addEventListener("click", function(){
-        insertCustomDropDown(procedureButton);
-      });
-    });
-
-    function insertCustomDropDown(insertBelow){
-      dropDownId = (insertBelow.id).replace("add", "");
-
-      //check if already exsists. If so, prompt user to ask if they want to remove it.
-      let currentElement = document.getElementById(dropDownId+"Div")
-      if(currentElement){
-        
-        if(!confirm("Are you sure you want to remove this procedure?")){return;}
-  
-        currentElement.parentNode.removeChild(currentElement);
-        return;
-      }
-      
-      let labelString = insertBelow.querySelector("p").innerText.replace("+", "");
-
-      let div = document.createElement("div");
-      div.className = "formTextBox"
-      div.id = dropDownId+"Div";
-      div.innerHTML = `
-        <label for="${dropDownId}">${labelString}</label>
-        <br>
-        <textarea id="${dropDownId}" name="${dropDownId}"></textarea>
-        <br>
-      `;
-
-
-
-      insertBelow.insertAdjacentElement("afterend", div);
-    }
-  }
 
   /**
    * A container for storing features that enhance the user interface experience.
    */
-  function handleQualityOfLifeFeatures(){
+  #handleQualityOfLifeFeatures(){
 
     function addListenersToTextAreas(){
       let textareas = document.querySelectorAll("textarea");
@@ -441,6 +367,10 @@ function CreateForm(appendTo, backendDestination, formConfig){
       window.scrollTo({ top: position, behavior: 'smooth' });
     }
 
+    function autoSaveForm(){
+      
+    }
+
     /**
      * 
      */
@@ -459,10 +389,4 @@ function CreateForm(appendTo, backendDestination, formConfig){
 
     loadAtTopOfPage();
   }
-
-  //function call stack
-  createForm(formConfig);
-  handleFormSubmission();
-  handleCustomDropDown();
-  handleQualityOfLifeFeatures();
 }

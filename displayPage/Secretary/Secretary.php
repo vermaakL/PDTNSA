@@ -12,10 +12,12 @@
         public static function addMenuButtons(){
             $files = glob(self::$relativeDirPath."/*.js");
             foreach($files as $file){
-                $file = pathinfo($file, PATHINFO_FILENAME);
-                $name = str_replace('_', ' ', $file);
+                $fileName = pathinfo($file, PATHINFO_FILENAME);
+
+                $funcName = preg_replace('/.*\)/', '', $fileName);//remove all chars before ')'
+                $displayedName = str_replace('_', ' ', $funcName);//replace '_' with spaces
                 
-                echo "<button type=\"button\" onclick=\"$file()\" class=\"mainMenu\">$name</button>\n";
+                echo "<button type=\"button\" onclick=\"$funcName()\" class=\"mainMenu\">$displayedName</button>\n";
             }
         }
 
