@@ -1,7 +1,14 @@
+<!--Call session manager to verify user-->
 <?php 
     include_once "backend/SessionManager.php";
     $role = SessionManager::init();
 ?>
+
+<!--JS page globals-->
+<script>
+    //get all the user data
+    const USER = JSON.parse('<?php echo json_encode($_SESSION['user']);?>');
+</script>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +30,7 @@
             <!--Creates the nav bar from the permissions the user has-->
             <nav>
                 <ul><?php
-                    foreach($_SESSION['permissions'] as $permission){
+                    foreach($_SESSION['user']['permissions'] as $permission){
                         echo "<li><a href=\"page.php?role=$permission\">$permission</a></li>";
                     }
                 ?></ul>

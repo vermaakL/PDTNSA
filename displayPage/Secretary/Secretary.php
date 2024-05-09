@@ -10,7 +10,7 @@
 
         //adds the menu buttons to execute the actions
         public static function addMenuButtons(){
-            $files = glob(self::$relativeDirPath."/*.js");
+            $files = glob(self::$relativeDirPath."/actions/*.js");
             foreach($files as $file){
                 $fileName = pathinfo($file, PATHINFO_FILENAME);
 
@@ -23,7 +23,7 @@
 
         //adds the js files that the buttons trigger
         public static function addJsFiles(){
-            $files = glob(self::$relativeDirPath."/*.js");
+            $files = glob(self::$relativeDirPath."/actions/*.js");
             foreach($files as $file){
                 echo "<script src=\"$file\"></script>\n";
             }

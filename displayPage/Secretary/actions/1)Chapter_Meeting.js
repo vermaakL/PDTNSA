@@ -9,11 +9,12 @@ function Chapter_Meeting(){
   main.appendChild(script);
 
   //once the script is loaded create the form
-  script.onload = function() {
-    let form = new CreateForm(main, "backend/submitForm.php");
+  script.onload = ()=>{
+    let form = new CreateForm("Chapter Meeting Minutes");
 
-    form.h1("Chapter Meeting Minutes");
-    form.attendance("Calling the Role", ["Gabe", "Leon", "Dakoda", "Aryaman", "Matt", "jamie", "jordon"]);
+    let attendance = ["Gabe", "Leon", "Dakoda", "Aryaman", "Matt", "jamie", "jordon"];
+    form.attendance("Calling the Role", attendance);
+
     form.textarea("Reading and Adopting the Minutes");
     form.dropDownTextarea("Initation Affiliation or Reception Ceremony");
     form.dropDownTextarea("Literary Exercises");
@@ -24,6 +25,8 @@ function Chapter_Meeting(){
     form.textarea("Reports of Committes");
     form.textarea("General Buisness");
     form.dropDownTextarea("Memorial Ceremony");
+
+    form.display(main)
   }
 }
 

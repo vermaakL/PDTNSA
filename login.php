@@ -1,6 +1,7 @@
+<!--Call session manager to verify user-->
 <?php
     include_once "backend/SessionManager.php";
-    SessionManager::init();
+    $role = SessionManager::init();
 ?>
 
 <!DOCTYPE html>
@@ -51,6 +52,7 @@
 
 <body>
     <main>
+        <!--Login Form-->
         <form action="backend/SessionManager.php" method="post">
             <input type="hidden" name="function", value="login">
 

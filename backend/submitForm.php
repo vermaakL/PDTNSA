@@ -1,16 +1,32 @@
-<?php
-    if($_SERVER["REQUEST_METHOD"] != "POST"){return;}
-    if(file_get_contents("php://input") === NULL){return;}
+<?php include_once "Database.php";?>
 
-    function saveFormToTxt($filePath){
+<?php
+    function submitForm(){
+        //get and save data
         $data = file_get_contents("php://input");
-        $decodedData = json_decode($data, true);
-        file_put_contents($filePath, print_r($decodedData, true));
+        file_put_contents("files/forms/asd.json", print_r($data, true));
 
         // Return a JSON response
         echo json_encode(array("status" => "success", "message" => "Form data processed successfully"));
     }
 
-    saveFormToTxt('files/form_data.txt');
+    function sendMetaDataFields(){
+        echo json_encode(Database::getTableColumns("Forms"));
+    }
 
+    if($_SERVER["REQUEST_METHOD"] === "POST"){
+        if(file_get_contents("php://input") === NULL){return;}
+            
+        submitForm();
+
+        return;
+    }
+    
+    if($_SERVER["REQUEST_METHOD"] === "GET"){
+        if(file_get_contents("php://input") === NULL){return;}
+            
+        sendMetaDataFields();
+
+        return;
+    }
 ?>
