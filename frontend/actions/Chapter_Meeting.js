@@ -3,14 +3,20 @@ function Chapter_Meeting(){
   let main = document.querySelector('main');
   main.innerHTML = '';
 
-  //get the script to create the form
-  let script = document.createElement("script");
-  script.src = "assets/actions/CreateForm.js";
-  main.appendChild(script);
+  //get the form component and sub components
+  let component = "frontend/components/CreateForm/";
+  let subComponents = ["CreateForm.js", "Attendance.js", "TextArea.js", "DropDownTextArea.js"];
+  subComponents.forEach((subComponent)=>{
+    let script = document.createElement("script");
+    script.src = component + subComponent;
+    main.appendChild(script);
+  });
 
   //once the script is loaded create the form
   script.onload = ()=>{
     let form = new CreateForm("Chapter Meeting Minutes");
+
+    form.appendChild(new TextArea());
 
     let attendance = ["Gabe", "Leon", "Dakoda", "Aryaman", "Matt", "jamie", "jordon"];
     form.attendance("Calling the Role", attendance);

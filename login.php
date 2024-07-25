@@ -8,7 +8,7 @@
 <html lang="en">
 
 <!-- include <head> -->
-<?php include_once "include/head.php"; ?>
+<?php include_once "frontend/head.html"; ?>
 
 <style>
     body {
@@ -48,6 +48,7 @@
             CSS;
         }
     ?>
+
 </style>
 
 <body>
@@ -56,7 +57,7 @@
         <form action="backend/SessionManager.php" method="post">
             <input type="hidden" name="function", value="login">
 
-            <img id="headerIcon" src="assets/images/NSAicon.png" alt="NSA icon">
+            <img id="headerIcon" src="frontend/images/NSAicon.png" alt="NSA icon">
             <br>
 
             <label for="username">Bond Number</label>

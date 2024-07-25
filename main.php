@@ -13,13 +13,13 @@
 <!DOCTYPE html>
 <html lang="en">
     <!-- include <head> -->
-    <?php include_once "include/head.php"; ?>
+    <?php include_once "frontend/head.html"; ?>
 
     <body>
         <header id="mainHeader">
             <!--Add icon to header. It links to the users highest permission-->
             <a href="page.php">
-                <img id="headerIcon" src="assets/images/NSAicon.png" alt="NSA icon">
+                <img id="headerIcon" src="frontend/images/NSAicon.png" alt="NSA icon">
             </a>
             
             <!--Add heading to header. It links the user to the main page of that role-->
@@ -43,11 +43,42 @@
         </header>
 
         <!--main content generate for specified role from displayPage-->
-        <main><?php include_once "displayPage/$role/$role.php";?></main>
+        <main>
+            <?php
+                
+                $actions = ["assets"];
+
+                //adds the menu buttons to execute the actions
+                function addMenuButtons(){
+                    $files = glob("frontend/actions/*.js");
+                    foreach($files as $file){
+                        $fileName = pathinfo($file, PATHINFO_FILENAME);
+
+                        $funcName = preg_replace('/.*\)/', '', $fileName);//remove all chars before ')'
+                        $displayedName = str_replace('_', ' ', $funcName);//replace '_' with spaces
+                        
+                        echo "<button type=\"button\" onclick=\"$funcName()\" class=\"mainMenu\">$displayedName</button>\n";
+                    }
+                }
+
+                //adds the js files that the buttons trigger
+                function addJsFiles(){
+                    $files = glob("frontend/actions/*.js");
+                    foreach($files as $file){
+                        echo "<script src=\"$file\"></script>\n";
+                    }
+                }
+                
+
+                //call stack
+                addMenuButtons();
+                addJsFiles();
+            ?>
+        </main>
 
         <footer>
             <img id="footerIcon" 
-                src="assets/images/phiDeltDal.png" 
+                src="frontend/images/phiDeltDal.png" 
                 alt='Phi Delta Theta Dalhousie University'
                 onclick="scrollToTop()"
             >

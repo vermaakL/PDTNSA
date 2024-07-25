@@ -38,7 +38,7 @@
             //get user from DB. The redirect to main page
             $_SESSION['user'] = Database::getUser();
             if(isset($_SESSION['user']['permissions'])){
-                header("Location: ../page.php");
+                header("Location: ../main.php");
             }
         }
         
@@ -96,8 +96,8 @@
             if(!in_array($role, $userPermissions)){$role = end($userPermissions);}
 
             //if user not on main site direct to main site
-            if($_SERVER['PHP_SELF']!="/page.php"){
-                header("Location: ../page.php");
+            if($_SERVER['PHP_SELF']!="/main.php"){
+                header("Location: ../main.php");
             }
 
             return $role;
