@@ -18,12 +18,12 @@
     <body>
         <header id="mainHeader">
             <!--Add icon to header. It links to the users highest permission-->
-            <a href="page.php">
+            <a href="main.php">
                 <img id="headerIcon" src="frontend/images/NSAicon.png" alt="NSA icon">
             </a>
             
             <!--Add heading to header. It links the user to the main page of that role-->
-            <a id="headerTitle" href="page.php?role=<?php echo $role?>">
+            <a id="headerTitle" href="main.php">
                 <h1><?php echo $role;?></h1>
             </a>
 
@@ -46,8 +46,6 @@
         <main>
             <?php
                 
-                $actions = ["assets"];
-
                 //adds the menu buttons to execute the actions
                 function addMenuButtons(){
                     $files = glob("frontend/actions/*.js");
@@ -80,7 +78,7 @@
             <img id="footerIcon" 
                 src="frontend/images/phiDeltDal.png" 
                 alt='Phi Delta Theta Dalhousie University'
-                onclick="scrollToTop()"
+                onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
             >
         </footer>
     </body>

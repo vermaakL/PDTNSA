@@ -1,21 +1,10 @@
 /**
  * REQUIRES: USER global var for metadata generation
  */
-class CreateForm{
-  static #formCounter = 0;
-  
-
-
-
-//////////////
-//   Form   //
-//////////////
-
-
-  //private instance variables
-  #form;
+class Form{
+  static #formID = 0;
+  #formDOM;
   #formData = {};
-  #submitButton;
 
   /**
    * Creates a form with a title
@@ -23,19 +12,16 @@ class CreateForm{
    */
   constructor(title){
     //create form
-    this.#form = document.createElement("form");
-    this.#form.id = "Form"+CreateForm.#formCounter;
-    this.#form.className = "CreateForm";
-    this.#form.action = "backend/submitForm.php";
-    this.#form.method = "post"
+    this.#formDOM = document.createElement("form");
+    this.#formDOM.id = "Form"+Form.#formID;
+    this.#formDOM.className = "CreateForm";
+    this.#formDOM.action = "backend/submitForm.php";
+    this.#formDOM.method = "post"
 
     //add form title
     let heading = document.createElement("h1");
     heading.innerHTML = title;
-    this.#form.appendChild(heading);
-
-    //add submit button
-    this.#handelSubmitButton();
+    this.#formDOM.appendChild(heading);
   }
 
   /**
@@ -43,28 +29,19 @@ class CreateForm{
    * @param {Node} parent The element to apend the form inside of. It is recommended that its empty
    */
   display(parent){
-    parent.appendChild(this.#form);
-    CreateForm.#formCounter++;
-  }
-
-  /**
-   * Creates the submit button and handels the submisson process
-   */
-  #handelSubmitButton(){
-    //add form submit button to the end
-    this.#submitButton = document.createElement("input");
-    this.#submitButton.className = "submit";
-    this.#submitButton.type = "submit";
-    this.#submitButton.value = "Submit";
-    this.#form.appendChild(this.#submitButton);
+    //add submit button
+    let submitButton = document.createElement("input");
+    submitButton.className = "submit";
+    submitButton.type = "submit";
+    submitButton.value = "Submit";
+    this.#formDOM.appendChild(submitButton);
 
     //handle form submission
-    this.#form.addEventListener('submit', (event) => {
+    this.#formDOM.addEventListener('submit', (event) => {
       event.preventDefault();
       
       //parse form data into json and add custom data
-      this.#formData["attendance"] = this.#attendanceData;
-      this.#formData["metaData"] = this.#generateMetaData();
+      this.#formData["metaData"] = USER;
       new FormData(event.target).forEach((value, key) => {
         this.#formData[key] = value;
       });
@@ -77,27 +54,41 @@ class CreateForm{
       .then(response => {})
       .then(json => {})
       .catch(error => {});
-
-      //remove submit button
-      this.#submitButton.remove();
     });
+
+    parent.appendChild(this.#formDOM);
+    Form.#formID++;
   }
 
   /**
-   * Generates the forms meta Data from the USER global var
-   * @returns the JSON containing the forms meta Data
-   */
-  #generateMetaData(){
-    return USER;
+ * Creates a div to contain an element based on its type
+ * @param {JSON} typeInfo 
+ * @returns the div
+ */
+  #createContainer(typeInfo){
+    let div = document.createElement("div");
+    div.className = typeInfo.type + "Container";
+
+    return div;
   }
 
+  /**
+   * Generates the items ID
+   * @param {JSON} typeInfo 
+   * @returns the string containing the Id
+   */
+  #generateId(typeInfo){
+    return this.#formDOM.id + typeInfo.type + typeInfo.count;
+  }
 
-
-  
-////////////////////////
-//   Form Elements   //
-///////////////////////
-
+  /**
+   * Converts the label text into the data text for the forms submit
+   * @param {String} labelText The label text displayed on the page
+   * @returns The data name
+   */
+  #generateDataName(labelText){
+    return labelText.replace(/ /g, "_");
+  }
 
   /**
    * Appends a text area to the form.
@@ -124,8 +115,8 @@ class CreateForm{
       //append after the element provided
       appendAfter.insertAdjacentElement('afterend', container);
     }else{
-      //append the text area to the form above the submit button
-      this.#form.insertBefore(container, this.#submitButton);
+      //append the text area to the end of the form
+      this.#formDOM.appendChild(container);
     }
 
     //center textarea on focus
@@ -149,7 +140,7 @@ class CreateForm{
     //add drop down button
     var button = document.createElement("div");
     button.className = this.#dropDownTextarea.type;
-    this.#form.insertBefore(button, this.#submitButton);
+    this.#formDOM.appendChild(button);
 
     //add text to button
     let p = document.createElement("p");
@@ -181,7 +172,6 @@ class CreateForm{
   /**
    * Appends an attendance box to the form
    */
-  #attendanceData = {};
   attendance(title, attendies){
 
     /**
@@ -227,8 +217,8 @@ class CreateForm{
       
       let time = (new Date()).toLocaleString();
       
-      if(!this.#attendanceData[name]){this.#attendanceData[name] = [];}
-      this.#attendanceData[name].push({status, time});
+      if(!this.#formData["attendance"][name]){this.#formData["attendance"][name] = [];}
+      this.#formData["attendance"][name].push({status, time});
     }
 
     /**
@@ -292,9 +282,9 @@ class CreateForm{
 
     //create attendance form
     let attendance = document.createElement("div");
-    attendance.id = this.#form.id+"attendance";
+    attendance.id = this.#formDOM.id+"attendance";
     attendance.className = "attendance";
-    this.#form.insertBefore(attendance, this.#submitButton);
+    this.#formDOM.appendChild(attendance);
 
     //attendance style
     let style = document.createElement("style");
@@ -369,39 +359,9 @@ class CreateForm{
     //create the attendance label
     let label = document.createElement("label");
     label.textContent = title;
-    this.#form.insertBefore(label, attendance);
+    this.#formDOM.insertBefore(label, attendance);
 
     createButtonsForAttendies();
     //createButtonForGuests();
-  }
-
-  /**
-   * Creates a div to contain an element based on its type
-   * @param {JSON} typeInfo 
-   * @returns the div
-   */
-  #createContainer(typeInfo){
-    let div = document.createElement("div");
-    div.className = typeInfo.type + "Container";
-
-    return div;
-  }
-
-  /**
-   * Generates the items ID
-   * @param {JSON} typeInfo 
-   * @returns the string containing the Id
-   */
-  #generateId(typeInfo){
-    return this.#form.id + typeInfo.type + typeInfo.count;
-  }
-
-  /**
-   * Converts the label text into the data text for the forms submit
-   * @param {String} labelText The label text displayed on the page
-   * @returns The data name
-   */
-  #generateDataName(labelText){
-    return labelText.replace(/ /g, "_");
   }
 }
